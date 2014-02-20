@@ -17,6 +17,6 @@ setuptools.setup(name='avro_json_serializer',
       description='Avro Json Serializer',
       author='Roman Inozemtsev',
       author_email='rinozemtsev@linkedin.com',
-      py_modules = ['avro_json_serializer'],
+      packages = ['avro_json_serializer'],
       license = 'Apache 2.0'
      )
