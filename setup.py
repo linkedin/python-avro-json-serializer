@@ -1,6 +1,5 @@
-#!/usr/bin/env python
-
 # -*- coding: utf-8 -*-
+#!/usr/bin/env python
 
 # (c) [2014] LinkedIn Corp. All rights reserved.
 # Licensed under the Apache License, Version 2.0 (the "License"); 
