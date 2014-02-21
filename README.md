@@ -46,6 +46,8 @@ avro_schema = avro.schema.make_avsc_object(schema_dict, {})
 
 serializer = AvroJsonSerializer(avro_schema)
 json_str = serializer.to_json(data)
-# result would be: {"fint":1,"flong":1,"fstring":"hi there","ffixed":"1234567890123456","frec":{"subfint":2},"funion_null":null,"ffloat":1.0,"fdouble":2.0}
+
+print json_str
+> {"fint":1,"flong":1,"fstring":"hi there","ffixed":"1234567890123456","frec":{"subfint":2},"funion_null":null,"ffloat":1.0,"fdouble":2.0}
 
 ```
