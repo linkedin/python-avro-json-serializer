@@ -51,3 +51,7 @@ print json_str
 > {"fint":1,"flong":1,"fstring":"hi there","ffixed":"1234567890123456","frec":{"subfint":2},"funion_null":null,"ffloat":1.0,"fdouble":2.0}
 
 ```
+
+See:
+
+`avro_json_serializer/test/test_avro_json_serializer.py` for more examples.
