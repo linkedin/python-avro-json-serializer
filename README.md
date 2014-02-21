@@ -42,7 +42,7 @@ schema_dict = {
     "type": "record"
 }
 
-avro_schema = avro.schema.make_avsc_object(schema_dict, {})
+avro_schema = avro.schema.make_avsc_object(schema_dict, avro.schema.Names())
 
 serializer = AvroJsonSerializer(avro_schema)
 json_str = serializer.to_json(data)
