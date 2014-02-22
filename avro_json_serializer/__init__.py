@@ -134,11 +134,6 @@ class AvroJsonSerializer(object):
         "error": _serialize_record,
     }
 
-    # Not supported for now; No need yet
-    # error_union
-    # error
-    # request
-
     def _serialize_data(self, schema, datum):
         """
         Non-specific serialize function.
