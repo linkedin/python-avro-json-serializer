@@ -128,7 +128,10 @@ class AvroJsonSerializer(object):
         "array": _serialize_array,
         "map": _serialize_map,
         "union": _serialize_union,
+        "error_union": _serialize_union,
         "record": _serialize_record,
+        "request": _serialize_record,
+        "error": _serialize_record,
     }
 
     # Not supported for now; No need yet

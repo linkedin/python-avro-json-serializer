@@ -248,3 +248,26 @@ class TestAvroJsonSerializer(TestCase):
         avro_schema = avro.schema.make_avsc_object(schema_dict, avro.schema.Names())
         avro_json = AvroJsonSerializer(avro_schema).to_json(data)
         self.assertEquals(avro_json, """{"intarr":[1,2,3]}""")
+
+    def test_user_record(self):
+        """
+        This schema example is from documentation http://avro.apache.org/docs/1.7.6/gettingstartedpython.html
+        """
+        schema_dict = {
+            "namespace": "example.avro",
+                  "type": "record",
+                  "name": "User",
+                  "fields": [
+                      {"name": "name", "type": "string"},
+                      {"name": "favorite_number",  "type": ["int", "null"]},
+                      {"name": "favorite_color", "type": ["string", "null"]}
+                  ]
+        }
+        avro_schema = avro.schema.make_avsc_object(schema_dict, avro.schema.Names())
+        serializer = AvroJsonSerializer(avro_schema)
+        self.assertEquals(serializer.to_json({"name": "Alyssa", "favorite_number": 256}),
+                          """{"name":"Alyssa","favorite_number":{"int":256},"favorite_color":null}""")
+        self.assertEquals(serializer.to_json({"name": "Ben", "favorite_number": 7, "favorite_color": "red"}),
+                          """{"name":"Ben","favorite_number":{"int":7},"favorite_color":{"string":"red"}}""")
+        self.assertEquals(serializer.to_json({"name": "Lion"}),
+                          """{"name":"Lion","favorite_number":null,"favorite_color":null}""")
