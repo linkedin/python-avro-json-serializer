@@ -3,7 +3,31 @@ Python Avro JSON serializer
 
 `AvroJsonSerializer` produces a JSON given avro schema and data.
 
-## Example:
+## Simple example:
+
+```python
+
+schema_dict = {
+    "namespace": "example.avro",
+          "type": "record",
+          "name": "User",
+          "fields": [
+              {"name": "name", "type": "string"},
+              {"name": "favorite_number",  "type": ["int", "null"]},
+              {"name": "favorite_color", "type": ["string", "null"]}
+          ]
+}
+avro_schema = avro.schema.make_avsc_object(schema_dict, avro.schema.Names())
+serializer = AvroJsonSerializer(avro_schema)
+self.assertEquals(serializer.to_json({"name": "Alyssa", "favorite_number": 256}),
+                  """{"name":"Alyssa","favorite_number":{"int":256},"favorite_color":null}""")
+self.assertEquals(serializer.to_json({"name": "Ben", "favorite_number": 7, "favorite_color": "red"}),
+                  """{"name":"Ben","favorite_number":{"int":7},"favorite_color":{"string":"red"}}""")
+self.assertEquals(serializer.to_json({"name": "Lion"}),
+                  """{"name":"Lion","favorite_number":null,"favorite_color":null}""")
+```
+
+## Another example:
 
 ```python
 
@@ -51,7 +75,5 @@ print json_str
 > {"fint":1,"flong":1,"fstring":"hi there","ffixed":"1234567890123456","frec":{"subfint":2},"funion_null":null,"ffloat":1.0,"fdouble":2.0}
 
 ```
-
-See:
 
 `avro_json_serializer/test/test_avro_json_serializer.py` for more examples.
