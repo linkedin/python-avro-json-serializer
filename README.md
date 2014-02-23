@@ -77,3 +77,8 @@ print json_str
 ```
 
 `avro_json_serializer/test/test_avro_json_serializer.py` for more examples.
+
+
+## License
+
+Python Avro JSON serializer is licensed under the terms of the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
