@@ -1,7 +1,7 @@
 Python Avro JSON serializer
 ================
 
-`AvroJsonSerializer` produces a JSON given avro schema and data.
+`AvroJsonSerializer` serializes data into a JSON format using AVRO schema.
 
 ## Simple example:
 
