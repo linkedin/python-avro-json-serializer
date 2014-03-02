@@ -13,7 +13,7 @@
 import setuptools
 
 setuptools.setup(name='avro_json_serializer',
-      version='0.3',
+      version='0.4',
       description='Avro Json Serializer',
       author='Roman Inozemtsev',
       author_email='rinozemtsev@linkedin.com',

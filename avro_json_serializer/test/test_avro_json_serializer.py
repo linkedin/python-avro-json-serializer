@@ -271,3 +271,70 @@ class TestAvroJsonSerializer(TestCase):
                           """{"name":"Ben","favorite_number":{"int":7},"favorite_color":{"string":"red"}}""")
         self.assertEquals(serializer.to_json({"name": "Lion"}),
                           """{"name":"Lion","favorite_number":null,"favorite_color":null}""")
+
+    def test_fixed_non_ascii(self):
+        schema_dict = {
+            "namespace": "example.avro",
+            "type": "record",
+            "name": "WithFixed",
+            "fields": [
+                self.FIELD_FIXED
+            ]
+        }
+        data = {"ffixed": "(~^\xfbzoW\x13p\x19!4\x0b+\x00\x00"}
+        avro_schema = avro.schema.make_avsc_object(schema_dict, avro.schema.Names())
+        serializer = AvroJsonSerializer(avro_schema)
+        json_data = serializer.to_json(data)
+        self.assertEquals(json_data, """{"ffixed":"(~^\\u00fbzoW\\u0013p\\u0019!4\\u000b+\\u0000\\u0000"}""")
+
+    def test_fixed_ascii(self):
+        schema_dict = {
+            "namespace": "example.avro",
+            "type": "record",
+            "name": "WithFixed",
+            "fields": [
+                self.FIELD_FIXED
+            ]
+        }
+        data = {"ffixed": "fixed text here!"}
+        avro_schema = avro.schema.make_avsc_object(schema_dict, avro.schema.Names())
+        serializer = AvroJsonSerializer(avro_schema)
+        json_data = serializer.to_json(data)
+        self.assertEquals(json_data, """{"ffixed":"fixed text here!"}""")
+
+
+    def test_bytes_field_non_ascii(self):
+        schema_dict = {
+            "namespace": "example.avro",
+            "type": "record",
+            "name": "WithFixed",
+            "fields": [
+                {
+                    "type": "bytes",
+                    "name": "fbytes"
+                }
+            ]
+        }
+        data = {"fbytes": "(~^\xfbzoW\x13p\x19!4\x0b+\x00\x00\x0b+\x00\x00"}
+        avro_schema = avro.schema.make_avsc_object(schema_dict, avro.schema.Names())
+        serializer = AvroJsonSerializer(avro_schema)
+        json_data = serializer.to_json(data)
+        self.assertEquals(json_data, """{"fbytes":"(~^\\u00fbzoW\\u0013p\\u0019!4\\u000b+\\u0000\\u0000\\u000b+\\u0000\\u0000"}""")
+
+    def test_bytes_field_ascii(self):
+        schema_dict = {
+            "namespace": "example.avro",
+            "type": "record",
+            "name": "WithFixed",
+            "fields": [
+                {
+                    "type": "bytes",
+                    "name": "fbytes"
+                }
+            ]
+        }
+        data = {"fbytes": "this is some long bytes field"}
+        avro_schema = avro.schema.make_avsc_object(schema_dict, avro.schema.Names())
+        serializer = AvroJsonSerializer(avro_schema)
+        json_data = serializer.to_json(data)
+        self.assertEquals(json_data, """{"fbytes":"this is some long bytes field"}""")

@@ -34,8 +34,27 @@ class AvroJsonSerializer(object):
 
     """
 
+    """
+    This charset will be used to encode binary data for `fixed` and `bytes` types
+    """
+    BYTES_CHARSET = "ISO-8859-1"
+
+    """
+    Charset for JSON. Python uses "utf-8"
+    """
+    JSON_CHARSET = "utf-8"
+
     def __init__(self, avro_schema):
+        """
+        :param avro_schema: instance of `avro.schema.Schema`
+        """
         self._avro_schema = avro_schema
+
+    def _serialize_binary_string(self, avro_schema, datum):
+        """
+        `fixed` and `bytes` datum  are serialized as "ISO-8859-1", but we need to re-encode it to UTF-8 for JSON.
+        """
+        return datum.decode(self.BYTES_CHARSET).encode(self.JSON_CHARSET)
 
     def _serialize_null(self, *args):
         """
@@ -110,16 +129,15 @@ class AvroJsonSerializer(object):
 
     """No need to serialize primitives
     """
-    PRIMITIVE_CONVERTERS = {
-        "boolean": bool,
-        "string": unicode,
-        "fixed": unicode,
-        "int": int,
-        "long": long,
-        "float": float,
-        "double": float,
-        "enum": unicode
-    }
+    PRIMITIVE_CONVERTERS = frozenset((
+        "boolean",
+        "string",
+        "int",
+        "long",
+        "float",
+        "double",
+        "enum"
+    ))
 
     """Some conversions require custom logic so we have separate functions for them.
     """
@@ -132,6 +150,8 @@ class AvroJsonSerializer(object):
         "record": _serialize_record,
         "request": _serialize_record,
         "error": _serialize_record,
+        "fixed": _serialize_binary_string,
+        "bytes": _serialize_binary_string
     }
 
     def _serialize_data(self, schema, datum):
