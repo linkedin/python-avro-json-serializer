@@ -1,7 +1,12 @@
 Python Avro JSON serializer
 ================
 
-`AvroJsonSerializer` serializes data into a JSON format using AVRO schema.
+[AvroJsonSerializer](avro_json_serializer/__init__.py#L28) serializes data into a JSON format using AVRO schema.
+
+Why do we need serializer instead of just dumping into JSON?
+* validation that your data matches the schema
+* serialization of unions (see [SimpleExample](#simple-example) below)
+* some Avro JSON deserializers expect fields in JSON in the same order as in the schema
 
 ## Simple example:
 
@@ -19,10 +24,13 @@ schema_dict = {
 }
 avro_schema = avro.schema.make_avsc_object(schema_dict, avro.schema.Names())
 serializer = AvroJsonSerializer(avro_schema)
+
 self.assertEquals(serializer.to_json({"name": "Alyssa", "favorite_number": 256}),
                   """{"name":"Alyssa","favorite_number":{"int":256},"favorite_color":null}""")
+
 self.assertEquals(serializer.to_json({"name": "Ben", "favorite_number": 7, "favorite_color": "red"}),
                   """{"name":"Ben","favorite_number":{"int":7},"favorite_color":{"string":"red"}}""")
+
 self.assertEquals(serializer.to_json({"name": "Lion"}),
                   """{"name":"Lion","favorite_number":null,"favorite_color":null}""")
 ```
@@ -76,8 +84,22 @@ print json_str
 
 ```
 
-`avro_json_serializer/test/test_avro_json_serializer.py` for more examples.
+See [tests](avro_json_serializer/test/test_avro_json_serializer.py) for more examples.
 
+
+## How to run tests
+```bash
+python-avro-json-serializer$ virtualenv env
+python-avro-json-serializer$ source venv/bin/activate
+(venv)python-avro-json-serializer$ pip install nose
+(venv)python-avro-json-serializer$ pip install -r requirements.txt
+(venv)python-avro-json-serializer$ nosetests
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 0.052s
+
+OK
+```
 
 ## License
 
