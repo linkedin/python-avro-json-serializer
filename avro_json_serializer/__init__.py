@@ -108,7 +108,7 @@ class AvroJsonSerializer(object):
             result[field.name] = self._serialize_data(field.type, datum.get(field.name))
         return result
 
-    """Some conversions are primitive and can be done by just calling python primitive.
+    """No need to serialize primitives
     """
     PRIMITIVE_CONVERTERS = {
         "boolean": bool,
@@ -145,7 +145,7 @@ class AvroJsonSerializer(object):
             raise AvroTypeException(schema, datum)
 
         if schema.type in AvroJsonSerializer.PRIMITIVE_CONVERTERS:
-            return self.PRIMITIVE_CONVERTERS[schema.type](datum)
+            return datum
 
         if schema.type in AvroJsonSerializer.COMPLEX_CONVERTERS:
             return self.COMPLEX_CONVERTERS[schema.type](self, schema, datum)
