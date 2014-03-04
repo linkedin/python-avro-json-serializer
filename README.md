@@ -8,6 +8,8 @@ Why do we need serializer instead of just dumping into JSON?
 * serialization of unions (see [SimpleExample](#simple-example) below)
 * some Avro JSON deserializers expect fields in JSON in the same order as in the schema
 
+Binary distribution can be found on [pypi](https://pypi.python.org/pypi/avro_json_serializer/).
+
 ## Simple example:
 
 ```python
