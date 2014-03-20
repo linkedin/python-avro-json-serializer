@@ -1,6 +1,8 @@
 Python Avro JSON serializer
 ================
 
+[![PyPI version](https://badge.fury.io/py/avro_json_serializer.png)](http://badge.fury.io/py/avro_json_serializer)
+
 [AvroJsonSerializer](avro_json_serializer/__init__.py#L28) serializes data into a JSON format using AVRO schema.
 
 Why do we need serializer instead of just dumping into JSON?
