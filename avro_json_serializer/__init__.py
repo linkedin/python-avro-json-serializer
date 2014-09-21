@@ -22,8 +22,13 @@ import avro.schema
 from avro.io import validate
 from avro.io import AvroTypeException
 
-# using simplejson because it is already required by avro
-from simplejson.ordered_dict import OrderedDict
+try:
+    from collections import OrderedDict
+except ImportError:
+    # In Python version older than 2.7 use simplejson,
+    # as it is already required by avro.
+    from simplejson.ordered_dict import OrderedDict
+
 
 class AvroJsonSerializer(object):
     """

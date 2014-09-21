@@ -11,12 +11,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 import setuptools
+from sys import version_info
 
-setuptools.setup(name='avro_json_serializer',
-      version='0.4',
-      description='Avro Json Serializer',
-      author='Roman Inozemtsev',
-      author_email='rinozemtsev@linkedin.com',
-      packages = ['avro_json_serializer'],
-      license = 'Apache 2.0'
-     )
+# Project uses OrderedDict which is part of Python Standard Library
+# since version 2.7. On older versions, this is provided by simplejson.
+install_requires = []
+if version_info[:2] <= (2, 7):
+    install_requires.append('simplejson >= 2.0.9')
+
+setup(
+        name='avro_json_serializer',
+        version='0.4.1',
+        description='Avro Json Serializer',
+        author='Roman Inozemtsev',
+        author_email='rinozemtsev@linkedin.com',
+        install_requires = install_requires,
+        packages = ['avro_json_serializer'],
+        license = 'Apache 2.0'
+)
