@@ -19,7 +19,7 @@ install_requires = []
 if version_info[:2] <= (2, 7):
     install_requires.append('simplejson >= 2.0.9')
 
-setup(
+setuptools.setup(
         name='avro_json_serializer',
         version='0.4.1',
         description='Avro Json Serializer',
