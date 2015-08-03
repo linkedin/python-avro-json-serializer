@@ -94,7 +94,7 @@ See [tests](avro_json_serializer/test/test_avro_json_serializer.py) for more exa
 
 ## How to run tests
 ```bash
-python-avro-json-serializer$ virtualenv env
+python-avro-json-serializer$ virtualenv venv
 python-avro-json-serializer$ source venv/bin/activate
 (venv)python-avro-json-serializer$ pip install nose
 (venv)python-avro-json-serializer$ pip install -r requirements.txt
