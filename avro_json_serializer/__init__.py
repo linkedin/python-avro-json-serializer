@@ -19,8 +19,13 @@ import functools
 import json
 
 import avro.schema
-from avro.io import validate
 from avro.io import AvroTypeException
+import six
+
+if six.PY2:
+    from avro.io import validate
+else:
+    from avro.io import Validate as validate
 
 try:
     from collections import OrderedDict
@@ -57,9 +62,12 @@ class AvroJsonSerializer(object):
 
     def _serialize_binary_string(self, avro_schema, datum):
         """
-        `fixed` and `bytes` datum  are serialized as "ISO-8859-1", but we need to re-encode it to UTF-8 for JSON.
+        `fixed` and `bytes` datum  are serialized as "ISO-8859-1", but we need to re-encode it to UTF-8 for JSON in Python 2.
         """
-        return datum.decode(self.BYTES_CHARSET).encode(self.JSON_CHARSET)
+        string = datum.decode(self.BYTES_CHARSET)
+        if six.PY2:
+            string = string.encode(self.JSON_CHARSET)
+        return string
 
     def _serialize_null(self, *args):
         """
@@ -78,7 +86,7 @@ class AvroJsonSerializer(object):
         if datum is None:
             raise AvroTypeException(schema, datum)
         serialize = functools.partial(self._serialize_data, schema.items)
-        return map(serialize, datum)
+        return list(map(serialize, datum))
 
     def _serialize_map(self, schema, datum):
         """
@@ -91,7 +99,7 @@ class AvroJsonSerializer(object):
         if datum is None:
             raise AvroTypeException(schema, datum)
         serialize = functools.partial(self._serialize_data, schema.values)
-        return dict((key, serialize(value)) for key, value in datum.iteritems())
+        return dict((key, serialize(value)) for key, value in six.iteritems(datum))
 
     def _serialize_union(self, schema, datum):
         """

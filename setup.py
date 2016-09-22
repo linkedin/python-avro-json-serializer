@@ -21,7 +21,7 @@ if version_info[:2] <= (2, 7):
 
 setuptools.setup(
         name='avro_json_serializer',
-        version='0.4.1',
+        version='0.5',
         description='Avro Json Serializer',
         author='Roman Inozemtsev',
         author_email='rinozemtsev@linkedin.com',

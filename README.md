@@ -96,14 +96,35 @@ See [tests](avro_json_serializer/test/test_avro_json_serializer.py) for more exa
 ```bash
 python-avro-json-serializer$ virtualenv venv
 python-avro-json-serializer$ source venv/bin/activate
-(venv)python-avro-json-serializer$ pip install nose
-(venv)python-avro-json-serializer$ pip install -r requirements.txt
-(venv)python-avro-json-serializer$ nosetests
-.........
+(venv)python-avro-json-serializer$ pip install tox
+(venv)python-avro-json-serializer$ tox
+GLOB sdist-make: /Users/bngo/python-avro-json-serializer/setup.py
+py27 create: /Users/bngo/python-avro-json-serializer/.tox/py27
+py27 installdeps: nose, -rrequirements.txt
+py27 inst: /Users/bngo/python-avro-json-serializer/.tox/dist/avro_json_serializer-0.4.1.zip
+py27 installed: avro==1.7.6,avro-json-serializer==0.4.1,nose==1.3.7,simplejson==3.8.2,six==1.10.0
+py27 runtests: PYTHONHASHSEED='107331485'
+py27 runtests: commands[0] | nosetests
+.............
 ----------------------------------------------------------------------
-Ran 9 tests in 0.052s
+Ran 13 tests in 0.066s
 
 OK
+py35 create: /Users/bngo/python-avro-json-serializer/.tox/py35
+py35 installdeps: nose, -rrequirements.txt
+py35 inst: /Users/bngo/python-avro-json-serializer/.tox/dist/avro_json_serializer-0.4.1.zip
+py35 installed: avro-json-serializer==0.4.1,avro-python3==1.8.1,nose==1.3.7,simplejson==3.8.2,six==1.10.0
+py35 runtests: PYTHONHASHSEED='107331485'
+py35 runtests: commands[0] | nosetests
+.............
+----------------------------------------------------------------------
+Ran 13 tests in 0.029s
+
+OK
+_____________________________________________________________________________________ summary _____________________________________________________________________________________
+  py27: commands succeeded
+  py35: commands succeeded
+  congratulations :)
 ```
 
 ## License
