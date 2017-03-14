@@ -11,7 +11,14 @@
 
 import avro.io
 import avro.schema
+import six
 from unittest import TestCase
+
+if six.PY2:
+    from avro.schema import make_avsc_object
+else:
+    from avro.schema import SchemaFromJSONData as make_avsc_object
+    long = int
 
 from avro_json_serializer import AvroJsonSerializer
 
@@ -151,11 +158,11 @@ class TestAvroJsonSerializer(TestCase):
 
     VALID_DATA_ALL_FIELDS = {
         "fint": 1,
-        "flong": 1L,
+        "flong": long(1),
         "ffloat": 1.0,
         "fdouble": 2.0,
         "fstring": "hi there",
-        "ffixed": "1234567890123456",
+        "ffixed": b"1234567890123456",
         "frec": {
             "subfint": 2
         },
@@ -163,19 +170,19 @@ class TestAvroJsonSerializer(TestCase):
     }
 
     def test_all_supported_types(self):
-        avro_schema = avro.schema.make_avsc_object(self.ALL_FIELDS_SCHEMA, avro.schema.Names())
+        avro_schema = make_avsc_object(self.ALL_FIELDS_SCHEMA, avro.schema.Names())
         avro_json = AvroJsonSerializer(avro_schema).to_json(self.VALID_DATA_ALL_FIELDS)
         self.assertEquals(avro_json, """{"fint":1,"flong":1,"fstring":"hi there","ffixed":"1234567890123456","frec":{"subfint":2},"funion_null":null,"ffloat":1.0,"fdouble":2.0}""")
 
     def test_fails_validation(self):
-        avro_schema = avro.schema.make_avsc_object(self.ALL_FIELDS_SCHEMA, avro.schema.Names())
+        avro_schema = make_avsc_object(self.ALL_FIELDS_SCHEMA, avro.schema.Names())
         data = dict(self.VALID_DATA_ALL_FIELDS)
         data["ffloat"] = "hi"
         serializer = AvroJsonSerializer(avro_schema)
         self.assertRaises(avro.io.AvroTypeException, serializer.to_json, data)
 
     def test_union_serialization_null(self):
-        avro_schema = avro.schema.make_avsc_object(self.UNION_FIELDS_SCHEMA, avro.schema.Names())
+        avro_schema = make_avsc_object(self.UNION_FIELDS_SCHEMA, avro.schema.Names())
         data = {
             "funion_null": None
         }
@@ -183,7 +190,7 @@ class TestAvroJsonSerializer(TestCase):
         self.assertEquals(avro_json, """{"funion_null":null}""")
 
     def test_union_serialization_not_null(self):
-        avro_schema = avro.schema.make_avsc_object(self.UNION_FIELDS_SCHEMA, avro.schema.Names())
+        avro_schema = make_avsc_object(self.UNION_FIELDS_SCHEMA, avro.schema.Names())
         data = {
             "funion_null": 1
         }
@@ -191,7 +198,7 @@ class TestAvroJsonSerializer(TestCase):
         self.assertEquals(avro_json, """{"funion_null":{"int":1}}""")
 
     def test_union_serialization_invalid(self):
-        avro_schema = avro.schema.make_avsc_object(self.UNION_FIELDS_SCHEMA, avro.schema.Names())
+        avro_schema = make_avsc_object(self.UNION_FIELDS_SCHEMA, avro.schema.Names())
         data = {
             "funion_null": "hi"
         }
@@ -199,7 +206,7 @@ class TestAvroJsonSerializer(TestCase):
         self.assertRaises(avro.io.AvroTypeException, serializer.to_json, data)
 
     def test_records_union(self):
-        avro_schema = avro.schema.make_avsc_object(self.UNION_RECORDS_SCHEMA, avro.schema.Names())
+        avro_schema = make_avsc_object(self.UNION_RECORDS_SCHEMA, avro.schema.Names())
         data = {
             "funion_rec": {
                 "field": 1
@@ -230,9 +237,11 @@ class TestAvroJsonSerializer(TestCase):
                 "two": 2
             }
         }
-        avro_schema = avro.schema.make_avsc_object(schema_dict, avro.schema.Names())
+        avro_schema = make_avsc_object(schema_dict, avro.schema.Names())
         avro_json = AvroJsonSerializer(avro_schema).to_json(data)
-        self.assertEquals(avro_json, """{"intmap":{"two":2,"one":1}}""")
+
+        # Dictionaries are unsorted
+        self.assertIn(avro_json, ("""{"intmap":{"one":1,"two":2}}""", """{"intmap":{"two":2,"one":1}}"""))
 
     def test_array(self):
         schema_dict = {
@@ -245,7 +254,7 @@ class TestAvroJsonSerializer(TestCase):
         data = {
             "intarr": [1, 2, 3]
         }
-        avro_schema = avro.schema.make_avsc_object(schema_dict, avro.schema.Names())
+        avro_schema = make_avsc_object(schema_dict, avro.schema.Names())
         avro_json = AvroJsonSerializer(avro_schema).to_json(data)
         self.assertEquals(avro_json, """{"intarr":[1,2,3]}""")
 
@@ -263,7 +272,7 @@ class TestAvroJsonSerializer(TestCase):
                       {"name": "favorite_color", "type": ["string", "null"]}
                   ]
         }
-        avro_schema = avro.schema.make_avsc_object(schema_dict, avro.schema.Names())
+        avro_schema = make_avsc_object(schema_dict, avro.schema.Names())
         serializer = AvroJsonSerializer(avro_schema)
         self.assertEquals(serializer.to_json({"name": "Alyssa", "favorite_number": 256}),
                           """{"name":"Alyssa","favorite_number":{"int":256},"favorite_color":null}""")
@@ -281,8 +290,8 @@ class TestAvroJsonSerializer(TestCase):
                 self.FIELD_FIXED
             ]
         }
-        data = {"ffixed": "(~^\xfbzoW\x13p\x19!4\x0b+\x00\x00"}
-        avro_schema = avro.schema.make_avsc_object(schema_dict, avro.schema.Names())
+        data = {"ffixed": b"(~^\xfbzoW\x13p\x19!4\x0b+\x00\x00"}
+        avro_schema = make_avsc_object(schema_dict, avro.schema.Names())
         serializer = AvroJsonSerializer(avro_schema)
         json_data = serializer.to_json(data)
         self.assertEquals(json_data, """{"ffixed":"(~^\\u00fbzoW\\u0013p\\u0019!4\\u000b+\\u0000\\u0000"}""")
@@ -296,8 +305,8 @@ class TestAvroJsonSerializer(TestCase):
                 self.FIELD_FIXED
             ]
         }
-        data = {"ffixed": "fixed text here!"}
-        avro_schema = avro.schema.make_avsc_object(schema_dict, avro.schema.Names())
+        data = {"ffixed": b"fixed text here!"}
+        avro_schema = make_avsc_object(schema_dict, avro.schema.Names())
         serializer = AvroJsonSerializer(avro_schema)
         json_data = serializer.to_json(data)
         self.assertEquals(json_data, """{"ffixed":"fixed text here!"}""")
@@ -315,8 +324,8 @@ class TestAvroJsonSerializer(TestCase):
                 }
             ]
         }
-        data = {"fbytes": "(~^\xfbzoW\x13p\x19!4\x0b+\x00\x00\x0b+\x00\x00"}
-        avro_schema = avro.schema.make_avsc_object(schema_dict, avro.schema.Names())
+        data = {"fbytes": b"(~^\xfbzoW\x13p\x19!4\x0b+\x00\x00\x0b+\x00\x00"}
+        avro_schema = make_avsc_object(schema_dict, avro.schema.Names())
         serializer = AvroJsonSerializer(avro_schema)
         json_data = serializer.to_json(data)
         self.assertEquals(json_data, """{"fbytes":"(~^\\u00fbzoW\\u0013p\\u0019!4\\u000b+\\u0000\\u0000\\u000b+\\u0000\\u0000"}""")
@@ -333,8 +342,8 @@ class TestAvroJsonSerializer(TestCase):
                 }
             ]
         }
-        data = {"fbytes": "this is some long bytes field"}
-        avro_schema = avro.schema.make_avsc_object(schema_dict, avro.schema.Names())
+        data = {"fbytes": b"this is some long bytes field"}
+        avro_schema = make_avsc_object(schema_dict, avro.schema.Names())
         serializer = AvroJsonSerializer(avro_schema)
         json_data = serializer.to_json(data)
         self.assertEquals(json_data, """{"fbytes":"this is some long bytes field"}""")
