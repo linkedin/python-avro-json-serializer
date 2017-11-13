@@ -1,4 +1,4 @@
 avro==1.7.6; python_version < '3.0'
 avro-python3==1.8.1; python_version >= '3.0'
-simplejson
+simplejson; python_version < '2.7'
 six

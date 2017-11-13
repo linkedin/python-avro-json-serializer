@@ -15,9 +15,14 @@ from sys import version_info
 
 # Project uses OrderedDict which is part of Python Standard Library
 # since version 2.7. On older versions, this is provided by simplejson.
-install_requires = []
-if version_info[:2] <= (2, 7):
+install_requires = ['six']
+if version_info[:2] < (2, 7):
     install_requires.append('simplejson >= 2.0.9')
+
+if version_info[:2] <= (3, 0):
+    install_requires.append('avro==1.7.6')
+else:
+    install_requires.append('avro-python3==1.8.1')
 
 setuptools.setup(
         name='avro_json_serializer',
