@@ -20,9 +20,9 @@ if version_info[:2] < (2, 7):
     install_requires.append('simplejson >= 2.0.9')
 
 if version_info[:2] <= (3, 0):
-    install_requires.append('avro==1.7.6')
+    install_requires.append('avro==1.8.2')
 else:
-    install_requires.append('avro-python3==1.8.1')
+    install_requires.append('avro-python3==1.8.2')
 
 setuptools.setup(
         name='avro_json_serializer',
