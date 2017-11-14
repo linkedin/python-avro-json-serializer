@@ -113,6 +113,7 @@ class TestAvroJsonSerializer(TestCase):
             },
             {
                 "type": "record",
+                "namespace": "example.avro",
                 "name": "rec2",
                 "fields": [
                     {
@@ -221,7 +222,7 @@ class TestAvroJsonSerializer(TestCase):
             }
         }
         another_record_json = AvroJsonSerializer(avro_schema).to_json(data_another_record)
-        self.assertEquals(another_record_json, """{"funion_rec":{"rec2":{"field":"hi"}}}""")
+        self.assertEquals(another_record_json, """{"funion_rec":{"example.avro.rec2":{"field":"hi"}}}""")
 
     def test_map(self):
         schema_dict = {

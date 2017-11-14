@@ -122,7 +122,10 @@ class AvroJsonSerializer(object):
                 else:
                     field_type_name = candiate_schema.type
                     if isinstance(candiate_schema, avro.schema.NamedSchema):
-                        field_type_name = candiate_schema.name
+                        if candiate_schema.namespace:
+                            field_type_name = candiate_schema.fullname
+                        else:
+                            field_type_name = candiate_schema.name
                     return {
                         field_type_name: self._serialize_data(candiate_schema, datum)
                     }
