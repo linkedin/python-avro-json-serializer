@@ -103,7 +103,6 @@ class TestAvroJsonSerializer(TestCase):
         "type": [
             {
                 "type": "record",
-                "namespace": "example.avro",
                 "name": "rec1",
                 "fields": [
                     {
@@ -215,7 +214,7 @@ class TestAvroJsonSerializer(TestCase):
             }
         }
         avro_json = AvroJsonSerializer(avro_schema).to_json(data)
-        self.assertEquals(avro_json, """{"funion_rec":{"example.avro.rec1":{"field":1}}}""")
+        self.assertEquals(avro_json, """{"funion_rec":{"rec1":{"field":1}}}""")
 
         data_another_record = {
             "funion_rec": {
