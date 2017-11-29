@@ -288,7 +288,7 @@ class AvroJsonDeserializer(AvroJsonBase):
                     return self._process_null()
                 else:
                     field_type_name = self._union_name(candidate_schema)
-                    return datum[field_type_name]
+                    return self._process_data(candidate_schema, datum[field_type_name])
         raise AvroTypeException(schema, datum)
 
     def _deserialize_record(self, schema, datum):
