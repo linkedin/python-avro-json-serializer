@@ -26,7 +26,7 @@ else:
 
 setuptools.setup(
         name='avro_json_serializer',
-        version='1.0.0',
+        version='1.0.1',
         description='Avro Json Serializer',
         author='Roman Inozemtsev',
         author_email='rinozemtsev@linkedin.com',
