@@ -343,6 +343,44 @@ class TestAvroJsonSerializer(TestCase):
         self.assertEquals(serializer.to_json(lion), lion_json)
         self.assertEquals(deserializer.from_json(lion_json), lion_full)
 
+    def test_nested_union_records(self):
+        schema_dict = {
+            "namespace": "nested",
+            "name": "OuterType",
+            "type": "record",
+            "fields": [{
+                "name": "outer",
+                "type": ["null", {
+                    "name": "MiddleType",
+                    "type": "record",
+                    "fields": [{
+                        "name": "middle",
+                        "type": ["null", {
+                            "name": "InnerType",
+                            "type": "record",
+                            "fields": [{
+                                "name": "inner",
+                                "type": "int"
+                            }]
+                        }]
+                    }]
+                }]
+            }]
+        }
+        data1 = {"outer": {"middle": {"inner": 1}}}
+        data2 = {"outer": {"middle": None}}
+        avro1 = """{"outer":{"nested.MiddleType":{"middle":{"nested.InnerType":{"inner":1}}}}}"""
+        avro2 = """{"outer":{"nested.MiddleType":{"middle":null}}}"""
+
+        avro_schema = make_avsc_object(schema_dict, avro.schema.Names())
+        serializer = AvroJsonSerializer(avro_schema)
+        self.assertEquals(serializer.to_json(data1), avro1)
+        self.assertEquals(serializer.to_json(data2), avro2)
+
+        deserializer = AvroJsonDeserializer(avro_schema)
+        self.assertEquals(deserializer.from_json(avro1), data1)
+        self.assertEquals(deserializer.from_json(avro2), data2)
+
     def test_fixed_non_ascii(self):
         schema_dict = {
             "namespace": "example.avro",
