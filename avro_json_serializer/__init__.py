@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
 # (c) [2014] LinkedIn Corp. All rights reserved.
-# Licensed under the Apache License, Version 2.0 (the "License"); 
-# you may not use this file except in compliance with the License. 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at  http://www.apache.org/licenses/LICENSE-2.0
 
-# Unless required by applicable law or agreed to in writing, software 
-# distributed under the License is distributed on an "AS IS" BASIS, 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 """
@@ -22,11 +22,14 @@ import avro.schema
 from avro.io import AvroTypeException
 import six
 
-if six.PY2:
+
+try:
     from avro.io import validate
-else:
+except ImportError:
     from avro.io import Validate as validate
-    basestring = str
+
+    if six.PY3:
+        basestring = str
 
 try:
     from collections import OrderedDict
