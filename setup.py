@@ -13,24 +13,20 @@
 import setuptools
 from sys import version_info
 
-# Project uses OrderedDict which is part of Python Standard Library
-# since version 2.7. On older versions, this is provided by simplejson.
-install_requires = ['six']
-if version_info[:2] < (2, 7):
-    install_requires.append('simplejson >= 2.0.9')
-
-if version_info[:2] <= (3, 0):
-    install_requires.append('avro==1.8.2')
-else:
-    install_requires.append('avro-python3==1.8.2')
-
 setuptools.setup(
         name='avro_json_serializer',
         version='1.0.1',
         description='Avro Json Serializer',
         author='Roman Inozemtsev',
         author_email='rinozemtsev@linkedin.com',
-        install_requires = install_requires,
+        install_requires = ['six'],
+        extra_require={
+            # Project uses OrderedDict which is part of Python Standard Library
+            # since version 2.7. On older versions, this is provided by simplejson.
+            ':python_version<="2.7"': ['simplejson>=2.0.9'],
+            ':python_version<="3.0"': ['avro==1.8.2'],
+            ':python_version>"3.0"': ['avro-python3==1.8.2'],
+        },
         packages = ['avro_json_serializer'],
         license = 'Apache 2.0'
 )
