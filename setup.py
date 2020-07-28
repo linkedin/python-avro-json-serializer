@@ -24,8 +24,8 @@ setuptools.setup(
             # Project uses OrderedDict which is part of Python Standard Library
             # since version 2.7. On older versions, this is provided by simplejson.
             ':python_version<="2.7"': ['simplejson>=2.0.9'],
-            ':python_version<="3.0"': ['avro==1.8.2'],
-            ':python_version>"3.0"': ['avro-python3==1.8.2'],
+            ':python_version<="3.0"': ['avro>=1.8.2,<1.10.0'],
+            ':python_version>"3.0"': ['avro-python3>=1.8.2,<2'],
         },
         packages = ['avro_json_serializer'],
         license = 'Apache 2.0'
