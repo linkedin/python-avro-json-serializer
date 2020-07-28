@@ -15,7 +15,7 @@ from sys import version_info
 
 setuptools.setup(
         name='avro_json_serializer',
-        version='1.0.2',
+        version='1.0.3',
         description='Avro Json Serializer',
         author='Roman Inozemtsev',
         author_email='rinozemtsev@linkedin.com',
