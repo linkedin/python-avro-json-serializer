@@ -13,10 +13,15 @@
 import setuptools
 from sys import version_info
 
+with open("README.md") as f:
+    long_description = f.read()
+
 setuptools.setup(
         name='avro_json_serializer',
-        version='1.0.3',
+        version='1.0.4',
         description='Avro Json Serializer',
+        long_description=long_description,
+        long_description_content_type="text/markdown",
         author='Roman Inozemtsev',
         author_email='rinozemtsev@linkedin.com',
         install_requires = ['six'],
