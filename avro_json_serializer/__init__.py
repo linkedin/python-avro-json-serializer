@@ -25,15 +25,12 @@ if six.PY2:
     from avro.io import AvroTypeException
 else:
     from avro.errors import AvroTypeException
-import six
+    basestring = str
 
 try:
     from avro.io import validate
 except ImportError:
     from avro.io import Validate as validate
-
-if six.PY3:
-    basestring = str
 
 try:
     from collections import OrderedDict
