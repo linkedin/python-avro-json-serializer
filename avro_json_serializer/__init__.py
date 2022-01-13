@@ -138,9 +138,6 @@ class AvroJsonBase(object):
         :param schema: Avro schema of the `datum`
         :param datum: Data to process
         """
-        print("Datum: {}".format(datum))
-        print("Schema: {}".format(schema))
-
         if not self._validate(schema, datum):
             raise AvroTypeException(schema, datum)
 

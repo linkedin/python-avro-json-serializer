@@ -120,7 +120,7 @@ class TestAvroJsonSerializer(TestCase):
                 "name": "rec2",
                 "fields": [
                     {
-                        "name": "field",
+                        "name": "field2",
                         "type": "string"
                     }
                 ]
@@ -252,11 +252,11 @@ class TestAvroJsonSerializer(TestCase):
 
         data_another_record = {
             "funion_rec": {
-                "field": "hi"
+                "field2": "hi"
             }
         }
         another_record_json = AvroJsonSerializer(avro_schema).to_json(data_another_record)
-        self.assertEquals(another_record_json, """{"funion_rec":{"example.avro.rec2":{"field":"hi"}}}""")
+        self.assertEquals(another_record_json, """{"funion_rec":{"example.avro.rec2":{"field2":"hi"}}}""")
         another_json_data = AvroJsonDeserializer(avro_schema).from_json(another_record_json)
         self.assertEquals(another_json_data, data_another_record)
 
