@@ -17,9 +17,14 @@ Inspired by avro.io.DatumWriter (which writes binary avro)
 
 import functools
 import json
+import six
 
 import avro.schema
-from avro.errors import AvroTypeException
+
+if six.PY2:
+    from avro.io import AvroTypeException
+else:
+    from avro.errors import AvroTypeException
 import six
 
 try:
