@@ -17,19 +17,20 @@ Inspired by avro.io.DatumWriter (which writes binary avro)
 
 import functools
 import json
-
-import avro.schema
-from avro.io import AvroTypeException
 import six
 
+import avro.schema
+
+if six.PY2:
+    from avro.io import AvroTypeException
+else:
+    from avro.errors import AvroTypeException
+    basestring = str
 
 try:
     from avro.io import validate
 except ImportError:
     from avro.io import Validate as validate
-
-    if six.PY3:
-        basestring = str
 
 try:
     from collections import OrderedDict

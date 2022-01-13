@@ -16,8 +16,10 @@ from unittest import TestCase
 
 if six.PY2:
     from avro.schema import make_avsc_object
+    from avro.io import AvroTypeException
 else:
-    from avro.schema import SchemaFromJSONData as make_avsc_object
+    from avro.schema import make_avsc_object
+    from avro.errors import AvroTypeException
     long = int
 
 from avro_json_serializer import AvroJsonSerializer, AvroJsonDeserializer
@@ -120,7 +122,7 @@ class TestAvroJsonSerializer(TestCase):
                 "name": "rec2",
                 "fields": [
                     {
-                        "name": "field",
+                        "name": "field2",
                         "type": "string"
                     }
                 ]
@@ -208,7 +210,7 @@ class TestAvroJsonSerializer(TestCase):
         data = dict(self.VALID_DATA_ALL_FIELDS)
         data["ffloat"] = "hi"
         serializer = AvroJsonSerializer(avro_schema)
-        self.assertRaises(avro.io.AvroTypeException, serializer.to_json, data)
+        self.assertRaises(AvroTypeException, serializer.to_json, data)
 
     def test_union_serialization_null(self):
         avro_schema = make_avsc_object(self.UNION_FIELDS_SCHEMA, avro.schema.Names())
@@ -236,7 +238,7 @@ class TestAvroJsonSerializer(TestCase):
             "funion_null": "hi"
         }
         serializer = AvroJsonSerializer(avro_schema)
-        self.assertRaises(avro.io.AvroTypeException, serializer.to_json, data)
+        self.assertRaises(AvroTypeException, serializer.to_json, data)
 
     def test_records_union(self):
         avro_schema = make_avsc_object(self.UNION_RECORDS_SCHEMA, avro.schema.Names())
@@ -252,11 +254,11 @@ class TestAvroJsonSerializer(TestCase):
 
         data_another_record = {
             "funion_rec": {
-                "field": "hi"
+                "field2": "hi"
             }
         }
         another_record_json = AvroJsonSerializer(avro_schema).to_json(data_another_record)
-        self.assertEquals(another_record_json, """{"funion_rec":{"example.avro.rec2":{"field":"hi"}}}""")
+        self.assertEquals(another_record_json, """{"funion_rec":{"example.avro.rec2":{"field2":"hi"}}}""")
         another_json_data = AvroJsonDeserializer(avro_schema).from_json(another_record_json)
         self.assertEquals(another_json_data, data_another_record)
 
@@ -476,7 +478,7 @@ class TestAvroJsonDeserializer(TestCase):
         avro_json = """{"name":"mcnameface"}"""
         avro_schema = make_avsc_object(schema_dict, avro.schema.Names())
         deserializer = AvroJsonDeserializer(avro_schema)
-        self.assertRaises(avro.io.AvroTypeException, deserializer.from_json, avro_json)
+        self.assertRaises(AvroTypeException, deserializer.from_json, avro_json)
 
     def test_unknown_fields_are_ignored(self):
         schema_dict = {

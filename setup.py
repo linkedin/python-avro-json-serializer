@@ -18,7 +18,7 @@ with open("README.md") as f:
 
 setuptools.setup(
         name='avro_json_serializer',
-        version='1.0.4',
+        version='1.0.5',
         description='Avro Json Serializer',
         long_description=long_description,
         long_description_content_type="text/markdown",
@@ -30,7 +30,7 @@ setuptools.setup(
             # since version 2.7. On older versions, this is provided by simplejson.
             ':python_version<="2.7"': ['simplejson>=2.0.9'],
             ':python_version<="3.0"': ['avro>=1.8.2,<1.10.0'],
-            ':python_version>"3.0"': ['avro-python3>=1.8.2,<2'],
+            ':python_version>"3.0"': ['avro>=1.10.0,<2'],
         },
         packages = ['avro_json_serializer'],
         license = 'Apache 2.0'
