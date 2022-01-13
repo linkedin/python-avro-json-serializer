@@ -19,17 +19,16 @@ import functools
 import json
 
 import avro.schema
-from avro.io import AvroTypeException
+from avro.errors import AvroTypeException
 import six
-
 
 try:
     from avro.io import validate
 except ImportError:
     from avro.io import Validate as validate
 
-    if six.PY3:
-        basestring = str
+if six.PY3:
+    basestring = str
 
 try:
     from collections import OrderedDict
@@ -139,6 +138,9 @@ class AvroJsonBase(object):
         :param schema: Avro schema of the `datum`
         :param datum: Data to process
         """
+        print("Datum: {}".format(datum))
+        print("Schema: {}".format(schema))
+
         if not self._validate(schema, datum):
             raise AvroTypeException(schema, datum)
 
